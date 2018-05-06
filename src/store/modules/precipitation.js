@@ -1,0 +1,46 @@
+import * as types from '../mutation-types';
+import apiService from '@/api/apiService';
+import localStorage from '@/services/local-storage';
+
+export default {
+    namespaced: true,
+    state() {
+        return {
+            precipitation: [],
+            isFetched: false,
+        };
+    },
+    getters: {
+        getAveragePrecipitation(state) {
+            const precipitation = state.precipitation;
+
+
+        },
+    },
+    mutations: {
+        setFetchStatus(state) {
+            state.isFetched = true;
+        },
+        [types.FETCH_PRECIPITATION](state, data) {
+            state.precipitation = data;
+        }
+    },
+    actions: {
+        setStorage(store) {
+            localStorage.setItem('precipitation', store.state.precipitation);
+        },
+        async fetchPrecipitation(store, data) {
+            const precipitation = localStorage.getItem('precipitation');
+
+            if (precipitation) {
+                store.commit(types.FETCH_PRECIPITATION, precipitation);
+            } else {
+                const precipitation = await apiService.getPrecipitation();
+                store.commit(types.FETCH_PRECIPITATION, precipitation.data);
+                store.commit('setFetchStatus');
+                await store.dispatch('setStorage');
+            }
+
+        }
+    },
+};
