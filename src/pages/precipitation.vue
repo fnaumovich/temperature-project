@@ -20,6 +20,7 @@
 import { mapState, mapActions } from 'vuex';
 import Datepicker from 'vuejs-datepicker';
 import LineChart from '@/components/LineChart.js';
+import { dateFormatter } from '@/tools/helpers/';
 
 export default {
     data() {
@@ -36,10 +37,10 @@ export default {
     },
     computed: {
         formattedDateStart() {
-            return this.formatDate(this.dateStart);
+            return dateFormatter(this.dateStart);
         },
         formattedDateEnd() {
-            return this.formatDate(this.dateEnd);
+            return dateFormatter(this.dateEnd);
         },
         precipitationRange() {
             return this.precipitation.filter(item => {
@@ -67,22 +68,16 @@ export default {
         ...mapState('precipitation', [ 'precipitation' ]),
     },
     methods: {
-        formatDate(date) {
-            const newDate = new Date(date);
-            const year = newDate.getFullYear();
-            const month = String(newDate.getMonth()).padStart(2, '0');
-            const day = String(newDate.getDate()).padStart(2, '0');
-
-            return `${ year }-${ month }-${ day }`;
-        },
         onSelectDay() {
             this.renderKey = Math.floor(Math.random() * 1000);
         },
 
         ...mapActions('precipitation', [ 'fetchPrecipitation' ]),
     },
-    mounted() {
-        this.fetchPrecipitation();
+    created() {
+        if (!this.precipitation.length) {
+            this.fetchPrecipitation();
+        }
     },
 };
 </script>

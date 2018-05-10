@@ -23,7 +23,7 @@ export default {
         },
         [types.FETCH_PRECIPITATION](state, data) {
             state.precipitation = data;
-        }
+        },
     },
     actions: {
         setStorage(store) {
@@ -32,15 +32,14 @@ export default {
         async fetchPrecipitation(store, data) {
             const precipitation = localStorage.getItem('precipitation');
 
-            if (precipitation) {
+            if (Array.isArray(precipitation) && precipitation.length) {
                 store.commit(types.FETCH_PRECIPITATION, precipitation);
             } else {
                 const precipitation = await apiService.getPrecipitation();
-                store.commit(types.FETCH_PRECIPITATION, precipitation.data);
+                store.commit(types.FETCH_PRECIPITATION, precipitation);
                 store.commit('setFetchStatus');
                 await store.dispatch('setStorage');
             }
-
         }
     },
 };

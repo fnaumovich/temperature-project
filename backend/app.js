@@ -3,6 +3,8 @@ const Router = require('koa-router');
 const database = require('./common/db');
 const cors = require('@koa/cors');
 
+const port = 1234;
+
 const app = new Koa();
 const router = new Router();
 
@@ -21,4 +23,4 @@ router.get('/getTemperature', (ctx, next) => {
 
 app.use(router.routes());
 
-app.listen(3000);
+app.listen(port);
