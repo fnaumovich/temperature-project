@@ -1,6 +1,7 @@
 import * as types from '../mutation-types';
 import apiService from '@/api/apiService';
 import localStorage from '@/services/local-storage';
+import indexedDB from '@/services/indexedDB';
 
 export default {
     namespaced: true,
@@ -40,6 +41,10 @@ export default {
                 store.commit('setFetchStatus');
                 await store.dispatch('setStorage');
             }
+        },
+        getIndexed() {
+            const db = indexedDB();
+            console.log(db);
         }
     },
 };

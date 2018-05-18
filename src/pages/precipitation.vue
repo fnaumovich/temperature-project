@@ -72,9 +72,10 @@ export default {
             this.renderKey = Math.floor(Math.random() * 1000);
         },
 
-        ...mapActions('precipitation', [ 'fetchPrecipitation' ]),
+        ...mapActions('precipitation', [ 'fetchPrecipitation', 'getIndexed' ]),
     },
     created() {
+        this.getIndexed();
         if (!this.precipitation.length) {
             this.fetchPrecipitation();
         }
