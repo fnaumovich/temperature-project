@@ -1,6 +1,7 @@
 import * as types from '../mutation-types';
 import apiService from '@/api/apiService';
 import localStorage from '@/services/local-storage';
+import { getMonth, getYear, getLastDayOfTheMonth } from '@/tools/helpers';
 
 export default {
     namespaced: true,
@@ -13,6 +14,36 @@ export default {
     getters: {
         getAveragePrecipitation(state) {
             const precipitation = state.precipitation;
+            const averagePrecipitationValues = [];
+            let count = 0;
+            let value = 0;
+
+            precipitation.forEach(item => {
+                const year = getYear(item.t);
+                const month = getMonth(item.t);
+                const lastDayOfMonth = getLastDayOfTheMonth(year, month);
+
+                value += item.v;
+
+                count++;
+
+                if (count === lastDayOfMonth) {
+                    const averageValue = parseFloat((value / lastDayOfMonth).toFixed(1));
+                    averagePrecipitationValues.push(averageValue);
+                    value = 0;
+                    count = 0;
+                }
+            });
+
+            return {
+                datasets: [
+                    {
+                        label: 'Precipitation',
+                        backgroundColor: '#f87979',
+                        data: averagePrecipitationValues,
+                    }
+                ]
+            };
         },
     },
     mutations: {

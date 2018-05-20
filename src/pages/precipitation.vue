@@ -7,7 +7,7 @@
         <div class="graphic-wrapper">
             <LineChart
                 :key="renderKey"
-                :data="precipitationValue"
+                :data="toggleablePrecipitationValue"
                 :options="{ responsive: false, maintainAspectRatio: false }"
                 :width="900"
                 :height="600"
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import Datepicker from 'vuejs-datepicker';
 import LineChart from '@/components/LineChart.js';
 import { dateFormatter } from '@/tools/helpers/';
@@ -29,6 +29,7 @@ export default {
             dateEnd: 0,
             format: 'yyyy-MM-dd',
             renderKey: 0,
+            isDateSelected: false,
         };
     },
     components: {
@@ -64,12 +65,17 @@ export default {
                 ]
             }
         },
+        toggleablePrecipitationValue() {
+            return this.isDateSelected ? this.precipitationValue : this.getAveragePrecipitation;
+        },
 
         ...mapState('precipitation', [ 'precipitation' ]),
+        ...mapGetters('precipitation', [ 'getAveragePrecipitation' ]),
     },
     methods: {
         onSelectDay() {
             this.renderKey = Math.floor(Math.random() * 1000);
+            this.isDateSelected = true;
         },
 
         ...mapActions('precipitation', [ 'fetchPrecipitation' ]),
