@@ -1,7 +1,6 @@
 import * as types from '../mutation-types';
 import apiService from '@/api/apiService';
 import localStorage from '@/services/local-storage';
-import indexedDB from '@/services/indexedDB';
 
 export default {
     namespaced: true,
@@ -14,8 +13,6 @@ export default {
     getters: {
         getAveragePrecipitation(state) {
             const precipitation = state.precipitation;
-
-
         },
     },
     mutations: {
@@ -42,9 +39,5 @@ export default {
                 await store.dispatch('setStorage');
             }
         },
-        getIndexed() {
-            const db = indexedDB();
-            console.log(db);
-        }
     },
 };

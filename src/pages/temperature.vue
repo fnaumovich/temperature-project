@@ -48,18 +48,18 @@ export default {
             });
         },
         temperatureValue() {
-            const precipitationValues = [];
+            const temperatureValues = [];
 
             this.temperatureRange.forEach(item => {
-                precipitationValues.push(item.v);
+                temperatureValues.push(item.v);
             });
 
             return {
                 datasets: [
                     {
-                        label: 'Data One',
+                        label: 'Temperature',
                         backgroundColor: '#f87979',
-                        data: precipitationValues,
+                        data: temperatureValues,
                     }
                 ]
             }
@@ -84,5 +84,11 @@ export default {
 </script>
 
 <style>
+    .date-pickers {
+        display: flex;
+    }
 
+    .date-picker {
+        margin-right: 10px;
+    }
 </style>

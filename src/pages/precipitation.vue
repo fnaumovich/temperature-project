@@ -57,7 +57,7 @@ export default {
             return {
                 datasets: [
                     {
-                        label: 'Data One',
+                        label: 'Precipitation',
                         backgroundColor: '#f87979',
                         data: precipitationValues,
                     }
@@ -72,10 +72,9 @@ export default {
             this.renderKey = Math.floor(Math.random() * 1000);
         },
 
-        ...mapActions('precipitation', [ 'fetchPrecipitation', 'getIndexed' ]),
+        ...mapActions('precipitation', [ 'fetchPrecipitation' ]),
     },
     created() {
-        this.getIndexed();
         if (!this.precipitation.length) {
             this.fetchPrecipitation();
         }
