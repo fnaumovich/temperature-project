@@ -15,6 +15,7 @@ export default {
         getAveragePrecipitation(state) {
             const precipitation = state.precipitation;
             const averagePrecipitationValues = [];
+            const labels = [];
             let count = 0;
             let value = 0;
 
@@ -30,12 +31,14 @@ export default {
                 if (count === lastDayOfMonth) {
                     const averageValue = parseFloat((value / lastDayOfMonth).toFixed(1));
                     averagePrecipitationValues.push(averageValue);
+                    labels.push('');
                     value = 0;
                     count = 0;
                 }
             });
 
             return {
+                labels: labels,
                 datasets: [
                     {
                         label: 'Precipitation',

@@ -7,17 +7,17 @@
         <div class="graphic-wrapper">
             <LineChart
                     :key="renderKey"
-                    :data="temperatureValue"
+                    :data="toggleableTemperatureValue"
                     :options="{ responsive: false, maintainAspectRatio: false }"
-                    :width="900"
-                    :height="600"
+                    :width="1200"
+                    :height="900"
             ></LineChart>
         </div>
     </section>
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 import Datepicker from 'vuejs-datepicker';
 import LineChart from '@/components/LineChart.js';
 import { dateFormatter } from '@/tools/helpers/';
@@ -29,6 +29,7 @@ export default {
             dateEnd: 0,
             format: 'yyyy-MM-dd',
             renderKey: 0,
+            isDateSelected: false,
         };
     },
     components: {
@@ -49,12 +50,15 @@ export default {
         },
         temperatureValue() {
             const temperatureValues = [];
+            const temperatureLabels = [];
 
             this.temperatureRange.forEach(item => {
                 temperatureValues.push(item.v);
+                temperatureLabels.push(item.t);
             });
 
             return {
+                labels: temperatureLabels,
                 datasets: [
                     {
                         label: 'Temperature',
@@ -62,15 +66,19 @@ export default {
                         data: temperatureValues,
                     }
                 ]
-            }
+            };
+        },
+        toggleableTemperatureValue() {
+            return this.isDateSelected ? this.temperatureValue : this.getAverageTemperature;
         },
 
-
         ...mapState('temperature', [ 'temperature' ]),
+        ...mapGetters('temperature', [ 'getAverageTemperature' ]),
     },
     methods: {
         onSelectDay() {
             this.renderKey = Math.floor(Math.random() * 1000);
+            this.isDateSelected = true;
         },
 
         ...mapActions('temperature', [ 'fetchTemperature' ]),

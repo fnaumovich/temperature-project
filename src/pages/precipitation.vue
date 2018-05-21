@@ -9,8 +9,8 @@
                 :key="renderKey"
                 :data="toggleablePrecipitationValue"
                 :options="{ responsive: false, maintainAspectRatio: false }"
-                :width="900"
-                :height="600"
+                :width="1200"
+                :height="900"
             ></LineChart>
         </div>
     </section>
@@ -50,12 +50,15 @@ export default {
         },
         precipitationValue() {
             const precipitationValues = [];
+            const precipitationLabels = [];
 
             this.precipitationRange.forEach(item => {
                 precipitationValues.push(item.v);
+                precipitationLabels.push(item.t)
             });
 
             return {
+                labels: precipitationLabels,
                 datasets: [
                     {
                         label: 'Precipitation',
@@ -63,7 +66,7 @@ export default {
                         data: precipitationValues,
                     }
                 ]
-            }
+            };
         },
         toggleablePrecipitationValue() {
             return this.isDateSelected ? this.precipitationValue : this.getAveragePrecipitation;

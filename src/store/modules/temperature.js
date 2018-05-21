@@ -15,6 +15,7 @@ export default {
         getAverageTemperature(state) {
             const temperature = state.temperature;
             const averageTemperatureValues = [];
+            const labels = [];
             let count = 0;
             let value = 0;
 
@@ -30,12 +31,22 @@ export default {
                 if (count === lastDayOfMonth) {
                     const averageValue = parseFloat((value / lastDayOfMonth).toFixed(1));
                     averageTemperatureValues.push(averageValue);
+                    labels.push('');
                     value = 0;
                     count = 0;
                 }
             });
 
-            return averageTemperatureValues;
+            return {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Precipitation',
+                        backgroundColor: '#f87979',
+                        data: averageTemperatureValues,
+                    }
+                ]
+            };
         },
     },
     mutations: {
