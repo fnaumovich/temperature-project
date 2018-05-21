@@ -24,7 +24,7 @@ export default {
 
 <style scoped lang="scss">
     .container {
-        width: 1400px;
+        width: 1600px;
         min-height: 100vh;
         margin: 0 auto;
     }

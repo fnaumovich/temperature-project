@@ -9,7 +9,7 @@
                 :key="renderKey"
                 :data="toggleablePrecipitationValue"
                 :options="{ responsive: false, maintainAspectRatio: false }"
-                :width="1200"
+                :width="1500"
                 :height="900"
             ></LineChart>
         </div>
