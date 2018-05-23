@@ -1,17 +1,16 @@
 <template>
     <section>
         <div class="date-pickers">
-            <datepicker class="date-picker date-picker__start" v-model="dateStart" :format="format" @selected="onSelectDay"></datepicker>
-            <datepicker class="date-picker date-picker__end" v-model="dateEnd" :format="format" @selected="onSelectDay"></datepicker>
+            <datepicker class="date-picker date-picker__start" v-model="dateStart" :format="format" @selected="onSelectDayStart"></datepicker>
+            <datepicker class="date-picker date-picker__end" v-model="dateEnd" :format="format" @selected="onSelectDayEnd"></datepicker>
         </div>
         <div class="graphic-wrapper">
-            <LineChart
+            <cLineChart
+                v-if="hasData"
                 :key="renderKey"
-                :data="toggleablePrecipitationValue"
-                :options="{ responsive: false, maintainAspectRatio: false }"
-                :width="1500"
-                :height="900"
-            ></LineChart>
+                :chartData="toggleablePrecipitationValue"
+            ></cLineChart>
+            <h1 class="info-title" v-else>No Data</h1>
         </div>
     </section>
 </template>
@@ -19,7 +18,7 @@
 <script>
 import { mapState, mapActions, mapGetters } from 'vuex';
 import Datepicker from 'vuejs-datepicker';
-import LineChart from '@/components/LineChart.js';
+import cLineChart from '@/components/cLineChart.vue';
 import { dateFormatter } from '@/tools/helpers/';
 
 export default {
@@ -30,18 +29,20 @@ export default {
             format: 'yyyy-MM-dd',
             renderKey: 0,
             isDateSelected: false,
+            isDateStartSelected: false,
+            isDateEndSelected: false,
         };
     },
     components: {
         Datepicker,
-        LineChart,
+        cLineChart,
     },
     computed: {
         formattedDateStart() {
-            return dateFormatter(this.dateStart);
+            return this.getFirstPrecipitationDate || dateFormatter(this.dateStart);
         },
         formattedDateEnd() {
-            return dateFormatter(this.dateEnd);
+            return this.getLastPrecipitationDate || dateFormatter(this.dateEnd);
         },
         precipitationRange() {
             return this.precipitation.filter(item => {
@@ -71,14 +72,29 @@ export default {
         toggleablePrecipitationValue() {
             return this.isDateSelected ? this.precipitationValue : this.getAveragePrecipitation;
         },
+        hasData() {
+            return this.toggleablePrecipitationValue.datasets[0].data.length > 0;
+        },
+        getFirstPrecipitationDate() {
+            return this.isDateStartSelected ? false : this.precipitation[0].t;
+        },
+        getLastPrecipitationDate() {
+            return this.isDateEndSelected ? false : this.precipitation[this.precipitation.length - 1].t;
+        },
 
         ...mapState('precipitation', [ 'precipitation' ]),
         ...mapGetters('precipitation', [ 'getAveragePrecipitation' ]),
     },
     methods: {
-        onSelectDay() {
+        onSelectDayStart() {
             this.renderKey = Math.floor(Math.random() * 1000);
             this.isDateSelected = true;
+            this.isDateStartSelected = true;
+        },
+        onSelectDayEnd() {
+            this.renderKey = Math.floor(Math.random() * 1000);
+            this.isDateSelected = true;
+            this.isDateEndSelected = true;
         },
 
         ...mapActions('precipitation', [ 'fetchPrecipitation' ]),
@@ -98,5 +114,12 @@ export default {
 
     .date-picker {
         margin-right: 10px;
+    }
+
+    .info-title {
+        margin-top: 50px;
+        font-size: 36px;
+        font-weight: 600;
+        text-align: center;
     }
 </style>
